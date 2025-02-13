@@ -1,0 +1,46 @@
+<div class="container">
+  <h2>Assign Shipment</h2>
+  
+  <div *ngIf="showError" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="showMessageBox" class="alert alert-success">
+    {{ responseMessage }}
+  </div>
+  
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Cargo ID</th>
+        <th>Cargo Name</th>
+        <th>Assigned</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cargo of cargList">
+        <td>{{ cargo.id }}</td>
+        <td>{{ cargo.content }}</td>
+        <td>{{ cargo.assigned ? 'Yes' : 'No' }}</td>
+        <td>
+          <button *ngIf="!cargo.assigned" (click)="assignModel.cargoId = cargo.id; cargo.showDriverDropdown = true" class="btn btn-primary">
+            Assign Driver
+          </button>
+          <div *ngIf="cargo.showDriverDropdown">
+            <select [(ngModel)]="assignModel.driverId" class="form-control">
+              <option *ngFor="let driver of driverList" [value]="driver.id">{{ driver.name }}</option>
+            </select>
+            <button (click)="assignDriver()" class="btn btn-success mt-2">Confirm</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
+  

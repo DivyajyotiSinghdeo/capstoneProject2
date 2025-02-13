@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { DashbaordComponent } from './dashbaord/dashbaord.component';
 import { AssginCargoComponent } from './assgin-cargo/assgin-cargo.component';
 import { ViewcargostatusComponent } from './viewcargostatus/viewcargostatus.component';
+import { AssignShipmentComponent } from './assign-shipment/assign-shipment.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -17,7 +18,7 @@ const routes: Routes = [
   { path: 'asgin-cargo', component: AssginCargoComponent },  
   { path: 'viewcargostatus', component: ViewcargostatusComponent },  
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-
+  {path:"assignShipment", component:AssignShipmentComponent},
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
 ];
 

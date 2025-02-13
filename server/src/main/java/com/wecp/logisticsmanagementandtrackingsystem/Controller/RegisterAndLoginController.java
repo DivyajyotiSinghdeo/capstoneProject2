@@ -1,6 +1,4 @@
 package com.wecp.logisticsmanagementandtrackingsystem.Controller;
-
-
 import com.wecp.logisticsmanagementandtrackingsystem.dto.LoginRequest;
 import com.wecp.logisticsmanagementandtrackingsystem.dto.LoginResponse;
 import com.wecp.logisticsmanagementandtrackingsystem.entity.Business;
@@ -19,28 +17,74 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+@RestController
+@RequestMapping("/api")
 public class RegisterAndLoginController {
 
-    @PostMapping("/api/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        // register user in user repository by user service
-        // after register in user repository then based on provided user role, register user in business, customer or driver repository
-        // return with registered user 200 OK
+    @Autowired
+    private UserService userService;
 
+    @Autowired
+    private BusinessService businessService;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private DriverService driverService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/register")
+public ResponseEntity<?> registerUser(@RequestBody User user) throws Exception {
+    User registeredUser = userService.registerUser(user);
+    if (registeredUser.getRole().equals("BUSINESS")) {
+        Business business = new Business();
+        business.setName(registeredUser.getUsername());
+        business.setEmail(user.getEmail());
+        businessService.saveBusiness(business);
+        return ResponseEntity.ok(business);
+    } else if (registeredUser.getRole().equals("CUSTOMER")) {
+        Customer customer = new Customer();
+        customer.setName(registeredUser.getUsername());
+        customer.setEmail(user.getEmail());
+        return ResponseEntity.ok(customerService.createCustomer(customer));
+    } else if (registeredUser.getRole().equals("DRIVER")) {
+        Driver driver = new Driver();
+        driver.setName(registeredUser.getUsername());
+        driver.setEmail(user.getEmail());
+        return ResponseEntity.ok(driverService.createDriver(driver));
     }
+    return ResponseEntity.ok().body("User already exists! Please try another.");
+}
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-        // implement login logic here
-        // return valid jwt token in loginResponse
-        // return 401 unauthorized if login failed
-    }
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password", e);
+        }
 
+        final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
+        final String token = jwtUtil.generateToken(userDetails.getUsername());
+
+        User user = userService.getUserByUsername(loginRequest.getUsername());
+
+        return ResponseEntity.ok(new LoginResponse(token, user.getUsername(), user.getEmail(), user.getRole(), user.getId()));
+    }
 
 }

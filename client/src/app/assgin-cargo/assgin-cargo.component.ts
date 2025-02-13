@@ -11,4 +11,5 @@ import { AuthService } from '../../services/auth.service';
 })
 export class AssginCargoComponent {
   //todo: complete missing code..
+  
 }

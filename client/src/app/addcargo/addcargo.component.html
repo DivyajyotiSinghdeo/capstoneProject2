@@ -1,1 +1,38 @@
-//doto: Complete missing code..
+
+<div class="container">
+  <h1>Welcome To Logistic Management System</h1>
+  
+
+  <div class="card">
+    
+
+    <div class="form-section">
+      <h3>Add New Cargo</h3>
+      <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Content:</label>
+          <input formControlName="content" type="text" placeholder="Content" />
+        </div>
+
+        <div class="form-group">
+          <label>Size:</label>
+          <input formControlName="size" type="text" placeholder="Size" />
+        </div>
+
+        <div class="form-group">
+          <label>Status:</label>
+          <select formControlName="status">
+            <option value="">Choose Status</option>
+            <option value="Order Created">Order Created</option>
+            <option value="Order Assigned">Order Assigned</option>
+            <option value="Order Delivered">Order Delivered</option>
+          </select>
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+   
+  </div>
+</div>
