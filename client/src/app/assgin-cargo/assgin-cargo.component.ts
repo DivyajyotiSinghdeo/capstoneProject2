@@ -21,7 +21,7 @@ export class AssginCargoComponent implements OnInit{
   constructor(public router:Router, public httpService:HttpService, private formBuilder: FormBuilder, private authService:AuthService)   {  }  
   ngOnInit(): void {   
     this.getAssginCargo();   
-    this.statusModel.newStatus=null;  
+    this.statusModel.newStatus=null;   
     const userIdString=this.authService.getId;
     console.log(userIdString);
     this.userId=Number(this.userId);
