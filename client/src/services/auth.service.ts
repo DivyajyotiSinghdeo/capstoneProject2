@@ -38,7 +38,7 @@ export class AuthService {
   {
     localStorage.setItem('id',id);
   }
-  get getId ():string|null
+  get getId ():any
   {
     return localStorage.getItem('id');
   }

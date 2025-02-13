@@ -1,0 +1,17 @@
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Content</th>
+        <th>Size</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    <tr *ngFor="let c of cargList">
+        <td>{{c.id}}</td>
+        <td>{{c.content}}</td>
+        <td>{{c.size}}</td>
+        <td>{{c.status}}</td>
+        <td>Update</td>
+
+    </tr>
+</table>
